@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-// 1. HALAMAN AUTENTIKASI (LOGIN & REGISTER)
 Route::get('/', function () {
     if (session('user_id')) { return redirect('/dashboard'); }
     return redirect('/login');
@@ -16,6 +15,17 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return view('login');
 })->name('login');
+
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/auto-migrate-posyandu', function () {
+    try {
+        Artisan::call('migrate --force');
+        return "Selamat! Database Posyandu Berhasil Dimigrasi! Silakan buka halaman login sekarang.";
+    } catch (\Exception $e) {
+        return "Gagal migrasi: " . $e->getMessage();
+    }
+});
 
 Route::post('/proses-login', function (Request $request) {
     $user = DB::table('users')->where('email', $request->email)->first();
@@ -57,14 +67,12 @@ Route::middleware(['web'])->group(function () {
         return view('pengaturan');
     });
 
-    // --- SEGMEN DATA BALITA ---
     Route::get('/balita', [BalitaController::class, 'index']);
     Route::get('/balita/create', [BalitaController::class, 'create']);
     Route::post('/balita/store', [BalitaController::class, 'store']);
     Route::get('/balita/delete/{id}', [BalitaController::class, 'delete']);
     Route::get('/laporan', [BalitaController::class, 'laporan']);
 
-    // --- SEGMEN FITUR PINTAR IMUNISASI ---
     Route::get('/imunisasi', function () {
         if (!session('user_id')) { return redirect('/login'); }
         $imunisasis = DB::table('imunisasis')->orderBy('id', 'desc')->get();
@@ -105,7 +113,7 @@ Route::middleware(['web'])->group(function () {
     });
 }); // <--- Kurung penutup middleware ditaruh di sini dengan benar
 
-// 3. JALUR LOGOUT
+
 Route::get('/logout', function () {
     session()->forget(['user_id', 'user_nama']);
     return redirect('/login')->with('success', 'Berhasil keluar aplikasi');
