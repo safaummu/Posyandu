@@ -1,67 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Laporan Posyandu</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+@extends('main')
 
-<body>
+@section('content')
 
-<div class="container mt-4">
+<h2>Laporan Balita</h2>
 
-    <h3>Laporan Data Balita</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>Nama</th>
+        <th>Umur</th>
+        <th>Berat</th>
+        <th>Tinggi</th>
+        <th>JK</th>
+    </tr>
 
-    <div class="row mt-3">
+    @foreach($balitas as $b)
+    <tr>
+        <td>{{ $b->nama }}</td>
+        <td>{{ $b->umur ?? '-' }}</td>
+        <td>{{ $b->berat }}</td>
+        <td>{{ $b->tinggi ?? '-' }}</td>
+        <td>{{ $b->jk }}</td>
+    </tr>
+    @endforeach
+</table>
 
-        <div class="col">
-            <div class="card p-3 text-center">
-                <h5>Total</h5>
-                <h3>{{ $total }}</h3>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card p-3 text-center">
-                <h5>Laki-laki</h5>
-                <h3>{{ $laki }}</h3>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card p-3 text-center">
-                <h5>Perempuan</h5>
-                <h3>{{ $perempuan }}</h3>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="row mt-3">
-
-        <div class="col">
-            <div class="card p-3 bg-success text-white text-center">
-                <h5>Normal</h5>
-                <h3>{{ $normal }}</h3>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card p-3 bg-warning text-center">
-                <h5>Pemantauan</h5>
-                <h3>{{ $pemantauan }}</h3>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card p-3 bg-danger text-white text-center">
-                <h5>Risiko</h5>
-                <h3>{{ $risiko }}</h3>
-            </div>
-        </div>
-
-    </div>
-
-</div>
-
-</body>
-</html>
+@endsection

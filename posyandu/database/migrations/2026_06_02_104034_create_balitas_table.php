@@ -15,8 +15,11 @@ return new class extends Migration
         $table->id();
         $table->string('nama');
         $table->date('tgl_lahir');
+        $table->integer('umur')->nullable();
         $table->string('jk');
         $table->string('orang_tua');
+        $table->float('berat'); // kg
+        $table->float('tinggi'); // cm
         $table->timestamps();
     });
     }

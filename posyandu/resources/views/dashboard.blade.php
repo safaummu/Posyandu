@@ -1,110 +1,112 @@
-@extends('layout')
+@extends('main')
 
 @section('content')
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<style>
+.container {
+    padding: 20px;
+}
 
-    <h4>Dashboard Posyandu</h4>
+.header {
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
 
-    <a href="/logout" class="btn btn-danger btn-sm">
-        Logout
-    </a>
+.card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 15px;
+}
 
-</div>
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
 
-@if(session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
-@endif
+.badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: white;
+    background: #4a90e2;
+}
+</style>
 
-<div class="row">
+<div class="container">
 
-    <div class="col-md-4">
-        <div class="card p-3">
-
-            <h5>Input Balita</h5>
-
-            <form method="POST" action="/simpan">
-                @csrf
-
-                <input name="nama" class="form-control mb-2" placeholder="Nama">
-
-                <input type="date" name="tgl_lahir" class="form-control mb-2">
-
-                <input name="berat" class="form-control mb-2" placeholder="Berat (kg)">
-
-                <select name="jk" class="form-control mb-2">
-                    <option>Laki-laki</option>
-                    <option>Perempuan</option>
-                </select>
-
-                <input name="orang_tua" class="form-control mb-2" placeholder="Orang Tua">
-
-                <button class="btn btn-primary w-100">Simpan</button>
-
-            </form>
-
-        </div>
+    <!-- HEADER -->
+    <div class="header">
+        <h2>🏥 Dashboard Posyandu Balita</h2>
+        <p>Informasi kesehatan & jadwal kegiatan posyandu</p>
     </div>
 
-    <div class="col-md-8">
-        <div class="card p-3">
+    <!-- INFO RINGKAS -->
+    <div class="grid">
 
-            <h5>Data Balita</h5>
-
-            <table class="table table-bordered">
-
-                <tr>
-                    <th>Nama</th>
-                    <th>Tgl Lahir</th>
-                    <th>Berat</th>
-                    <th>JK</th>
-                    <th>Orang Tua</th>
-                    <th>Aksi</th>
-                </tr>
-
-                @foreach($data as $d)
-
-                @php
-                    $tgl = \Carbon\Carbon::parse($d->tgl_lahir);
-                    $umur = $tgl->diffInYears(\Carbon\Carbon::now());
-
-                    $status = 'Normal';
-
-                    if($umur >= 2 && $d->berat < 10){
-                        $status = 'Risiko Stunting';
-                    } elseif($d->berat < 12){
-                        $status = 'Perlu Pemantauan';
-                    }
-                @endphp
-
-                <tr>
-                    <td>{{ $d->nama }}</td>
-                    <td>{{ $d->tgl_lahir }}</td>
-                    <td>{{ $d->berat }} kg</td>
-                    <td>{{ $d->jk }}</td>
-                    <td>{{ $d->orang_tua }}</td>
-
-                    <td>
-                        <button class="btn btn-warning btn-sm"
-                            onclick="editData(JSON.parse(this.dataset.item))"
-                            data-item='@json($d)'>
-                            Edit
-                        </button>
-
-                        <button class="btn btn-danger btn-sm"
-                            onclick="hapusData({{ $d->id }})">
-                            Hapus
-                        </button>
-                    </td>
-                </tr>
-
-                @endforeach
-
-            </table>
-
+        <div class="card">
+            <h3>👶 Total Balita</h3>
+            <h2>{{ $totalBalita ?? 0 }}</h2>
         </div>
+
+        <div class="card">
+            <h3>🔴 Stunting</h3>
+            <h2>{{ $stunting ?? 0 }}</h2>
+        </div>
+
+        <div class="card">
+            <h3>🟢 Normal</h3>
+            <h2>{{ $normal ?? 0 }}</h2>
+        </div>
+
+    </div>
+
+    <!-- PENGUMUMAN -->
+    <div class="card">
+        <h3>📢 Pengumuman Posyandu</h3>
+
+        <p>
+            📅 <b>Imunisasi rutin akan dilaksanakan:</b><br>
+            <span class="badge">Sabtu, 22 Juni 2026</span>
+        </p>
+
+        <p>
+            📍 Lokasi: <b>PUSKESMAS SUKARAMI PALEMBANG</b><br>
+            🕘 Waktu: <b>08.00 - 11.00 WIB</b>
+        </p>
+
+        <hr>
+
+        <p>
+            ⚠️ Orang tua dihimbau membawa:
+            <ul>
+                <li>Buku KIA</li>
+                <li>Kartu imunisasi</li>
+                <li>Balita dalam keadaan sehat</li>
+            </ul>
+        </p>
+    </div>
+
+    <!-- EDUKASI -->
+    <div class="card">
+        <h3>📚 Edukasi Kesehatan</h3>
+
+        <p>
+            💡 Stunting dapat dicegah dengan:
+        </p>
+
+        <ul>
+            <li>Pemberian ASI eksklusif</li>
+            <li>Asupan gizi seimbang</li>
+            <li>Imunisasi lengkap</li>
+            <li>Rutin cek berat & tinggi badan</li>
+        </ul>
     </div>
 
 </div>
