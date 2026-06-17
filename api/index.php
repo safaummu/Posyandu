@@ -1,4 +1,3 @@
 <?php
 
-// Mengarahkan Vercel ke folder public bawaan Laravel
-require __DIR__ . '/../public/index.php';
+require __DIR__ . '/../index.php';
