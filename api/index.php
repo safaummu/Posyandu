@@ -1,13 +1,8 @@
 <?php
 
-if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    $basePath = __DIR__ . '/..';
-} else {
-    $basePath = __DIR__ . '/../posyandu';
-}
+require __DIR__ . '/../posyandu/vendor/autoload.php';
 
-require $basePath . '/vendor/autoload.php';
-$app = require_once $basePath . '/bootstrap/app.php';
+$app = require_once __DIR__ . '/../posyandu/bootstrap/app.php';
 
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
